@@ -1,0 +1,46 @@
+OS: Debian 9
+
+apt-get update
+apt-get install ufw
+ufw enable
+ufw allow ssh
+ufw allow from <ip> to any port 2000
+ufw allow from <ip> to any port 2001
+ufw allow from <ip> to any port 2002
+
+apt-get install dante-server
+apt-get install htop
+
+rm /etc/danted.conf
+
+nano /etc/danted.conf
+
+*********************************************************************
+logoutput: /var/log/danted.log
+internal: <ip1> port = 2000
+external: <ip1>
+
+internal: <ip2> port = 2001
+external: <ip2>
+
+internal: <ip3> port = 2002
+external: <ip3>
+
+external.rotation : same-same
+
+
+clientmethod: none
+socksmethod: none
+external.rotation : same-same
+
+client pass {
+         from: 0.0.0.0/0 to: 0.0.0.0/0
+         log: error  connect disconnect
+ }
+
+socks pass {
+          from: 0.0.0.0/0 to: 0.0.0.0/0
+         log: error  connect disconnect iooperation
+ }
+*************************************************************************
+update-rc.d danted enable
